@@ -68,7 +68,7 @@ const displayMovements = (movements) => {
     const html = `
     <div class="movements__row">
       <div class="movements__type movements__type--${type}">${i+1} ${type}</div>
-      <div class="movements__value">${mov}</div>
+      <div class="movements__value">${mov}€</div>
     </div>
     `;
 
@@ -82,10 +82,29 @@ const calcDisplayBalance = (movements) => {
   const balance = movements.reduce((acc, mov) => {
     return acc + mov;
   }, 0);
-  labelBalance.textContent = `${balance} EUR`;
+  labelBalance.textContent = `${balance} €`;
 };
 
 calcDisplayBalance(account1.movements);
+
+const calcDisplaySummary = (movements) => {
+  const incoms = movements.filter(mov => mov > 0)
+  .reduce((acc, cur) => acc + cur);
+  labelSumIn.textContent = `${incoms}€`;
+
+  const outcoms = movements.filter(mov => mov < 0)
+  .reduce((acc, cur) => acc + cur);
+  labelSumOut.textContent = `${Math.abs(outcoms)}€`;
+
+  const interest = movements.filter(mov => mov > 0)
+  .map(deposit => deposit * 1.2 / 100)
+  .filter(int => int >= 1)
+  .reduce((acc, cur) => acc + cur);
+;
+  labelSumInterest.textContent = `${interest}€`;
+}
+
+calcDisplaySummary(account1.movements);
 
 const createUserNames = (accs) => {
   accs.forEach(item => {
@@ -104,23 +123,8 @@ createUserNames(accounts);
 /////////////////////////////////////////////////
 // LECTURES
 
-const movements = account1.movements;
-
-const deposits = movements.filter((mov)=>{
-  return mov > 0;
-});
-
-const withdrawals = movements.filter((mov) => mov < 0);
 
 
-const balance = movements.reduce((a, b) => {
-  return a + b;
-});
-
-
-const maximum = movements.reduce((a, b) => {
-  return a > b ? a : a = b;
-})
 
 
 
@@ -128,35 +132,3 @@ const maximum = movements.reduce((a, b) => {
 
 
 /////////////////////////////////////////////////
-
-const data1 = [5, 2, 4, 1, 15, 8, 3];
-const data2 = [16, 6, 10, 5, 6, 1, 4];
-
-const calcAverageHumanAge = (dogAge) => {
-
-  const humanYears = dogAge.map((age) => {
-    return age <=2 ? 2 * age : 16 + age * 4;
-  })
-
-  console.log(`Human years of set dog's years is ${humanYears.join(' ')}`);
-
-  const humanExclude = humanYears.filter((age, i) => {
-   return age >= 18; 
-  })
-
-  console.log(`the Age more than 18 years old is ${humanExclude.join(' ')}`);
-
-  const averageYears = (arr) => {
-    let result = arr.reduce((a, b) => {
-      return a + b;
-    }) / arr.length;
-    return  Math.trunc(result );
-  }
-
-  console.log(`the avarage value of Human's years is ${averageYears(humanExclude)}`);
-
-}
-
-calcAverageHumanAge(data1);
-console.log(`====================   Second DATA SET of Doggi`);
-calcAverageHumanAge(data2);
