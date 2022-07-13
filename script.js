@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -161,6 +161,16 @@ btnTransfer.addEventListener('click', e => {
   inputTransferAmount.value = inputTransferTo.value = '';
 });
 
+btnLoan.addEventListener('click', e => {
+  e.preventDefault();
+  const amount = +inputLoanAmount.value;
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    currentAccount.movements.push(amount);
+    updateUI(currentAccount);
+  }
+  inputLoanAmount.value = '';
+});
+
 btnClose.addEventListener('click', e => {
   e.preventDefault(0);
   if (
@@ -177,4 +187,5 @@ btnClose.addEventListener('click', e => {
 /////////////////////////////////////////////////
 // LECTURES
 
-/////////////////////////////////////////////////
+console.log({ a: 1 } == { a: 1 });
+console.log({ a: 1 } === { a: 1 });
