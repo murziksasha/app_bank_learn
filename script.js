@@ -61,9 +61,12 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = movements => {
+const displayMovements = (movements, sort = false) => {
   containerMovements.innerHTML = '';
-  movements.forEach((mov, i) => {
+
+  const movem = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+  movem.forEach((mov, i) => {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `
     <div class="movements__row">
@@ -173,19 +176,66 @@ btnLoan.addEventListener('click', e => {
 
 btnClose.addEventListener('click', e => {
   e.preventDefault(0);
-  if (
-    inputCloseUsername.value === currentAccount.username &&
-    +inputClosePin.value === currentAccount.pin
-  ) {
+  if (inputCloseUsername.value === currentAccount.username && +inputClosePin.value === currentAccount.pin) {
     const index = accounts.findIndex(acc => acc.username === currentAccount.username);
     accounts.splice(index, 1);
     containerApp.style.opacity = 0;
   }
 });
 
+let sorter = false;
+
+btnSort.addEventListener('click', e => {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorter);
+  sorter = !sorter;
+});
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
 
-console.log({ a: 1 } == { a: 1 });
-console.log({ a: 1 } === { a: 1 });
+//this is a nice title => This Is a Nice Title
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] },
+];
+
+const recomF = arr => {
+  arr.forEach(item => {
+    item.recomFood = Math.trunc(item.weight ** 0.75 * 28);
+  });
+};
+
+recomF(dogs);
+const ownersEatTooMuch = [],
+  ownersEatTooLittle = [];
+
+const compareFactFood = arr => {
+  arr.forEach(item => {
+    if (item.owners.includes('Sarah')) {
+      if (item.curFood > item.recomFood) {
+        console.log(`your dog eat more for ${item.curFood - item.recomFood}`);
+      } else {
+        console.log(`your dog eat less for ${item.recomFood - item.curFood}`);
+      }
+    }
+    item.curFood > item.recomFood ? ownersEatTooMuch.push(item.owners) : ownersEatTooLittle.push(item.owners);
+  });
+};
+
+compareFactFood(dogs);
+
+console.log(`too much is ${ownersEatTooMuch.flat().join(',  ')}`);
+console.log(`too little is ${ownersEatTooLittle.flat().join(', ')}`);
+
+console.log(dogs);
+console.log(dogs.some(dog => dog.curFood === dog.recomFood));
+
+console.log(dogs.some(dog => dog.curFood > dog.recomFood * 0.9 && dog.curFood < dog.recFood * 1.1));
+
+const shallowCopy = dogs.slice().sort((a, b) => a.recomFood - b.recomFood);
+
+console.log(shallowCopy);
