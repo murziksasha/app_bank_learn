@@ -71,7 +71,7 @@ const displayMovements = (movements, sort = false) => {
     const html = `
     <div class="movements__row">
       <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-      <div class="movements__value">${mov}€</div>
+      <div class="movements__value">${mov.toFixed(2)}€</div>
     </div>
     `;
 
@@ -83,19 +83,19 @@ const calcDisplayBalance = accounts => {
   accounts.balance = accounts.movements.reduce((acc, mov) => {
     return acc + mov;
   }, 0);
-  labelBalance.textContent = `${accounts.balance} €`;
+  labelBalance.textContent = `${accounts.balance.toFixed(2)} €`;
 };
 
 const calcDisplaySummary = account => {
   const { movements, interestRate } = account;
 
   const incoms = movements.filter(mov => mov > 0).reduce((acc, cur) => acc + cur);
-  labelSumIn.textContent = `${incoms}€`;
+  labelSumIn.textContent = `${incoms.toFixed(2)}€`;
 
   let outcoms = movements.filter(mov => mov < 0);
   if (outcoms.length) {
     outcoms = movements.reduce((acc, cur) => acc + cur);
-    labelSumOut.textContent = `${Math.abs(outcoms)}€`;
+    labelSumOut.textContent = `${outcoms.toFixed(2)}€`;
   } else {
     labelSumOut.textContent = `0000€`;
   }
@@ -196,46 +196,3 @@ btnSort.addEventListener('click', e => {
 // LECTURES
 
 //this is a nice title => This Is a Nice Title
-const dogs = [
-  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
-  { weight: 8, curFood: 200, owners: ['Matilda'] },
-  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
-  { weight: 32, curFood: 340, owners: ['Michael'] },
-];
-
-const recomF = arr => {
-  arr.forEach(item => {
-    item.recomFood = Math.trunc(item.weight ** 0.75 * 28);
-  });
-};
-
-recomF(dogs);
-const ownersEatTooMuch = [],
-  ownersEatTooLittle = [];
-
-const compareFactFood = arr => {
-  arr.forEach(item => {
-    if (item.owners.includes('Sarah')) {
-      if (item.curFood > item.recomFood) {
-        console.log(`your dog eat more for ${item.curFood - item.recomFood}`);
-      } else {
-        console.log(`your dog eat less for ${item.recomFood - item.curFood}`);
-      }
-    }
-    item.curFood > item.recomFood ? ownersEatTooMuch.push(item.owners) : ownersEatTooLittle.push(item.owners);
-  });
-};
-
-compareFactFood(dogs);
-
-console.log(`too much is ${ownersEatTooMuch.flat().join(',  ')}`);
-console.log(`too little is ${ownersEatTooLittle.flat().join(', ')}`);
-
-console.log(dogs);
-console.log(dogs.some(dog => dog.curFood === dog.recomFood));
-
-console.log(dogs.some(dog => dog.curFood > dog.recomFood * 0.9 && dog.curFood < dog.recFood * 1.1));
-
-const shallowCopy = dogs.slice().sort((a, b) => a.recomFood - b.recomFood);
-
-console.log(shallowCopy);
