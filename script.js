@@ -183,6 +183,26 @@ const updateUI = acc => {
   displayMovements(acc);
 };
 
+const startLogOutTimer = () => {
+  //set time to 5 minutes
+  let time = 100;
+  //call the timer every second
+  const timer = setInterval(() => {
+    const minutes = String(Math.trunc(time / 60)).padStart(2, 00);
+    const secods = time % 60;
+    //in each call, print ther remaining time to UI
+    labelTimer.textContent = `${minutes}:${secods}`;
+    time--;
+
+    //When 0 seconds, stop timer and log out user
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = `Log in to get started`;
+      containerApp.style.opacity = `0`;
+    }
+  }, 1000);
+};
+
 let currentAccount;
 
 //Fake always logged in
@@ -224,6 +244,8 @@ btnLogin.addEventListener('click', e => {
     //clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur(); //remove focus of the field
+
+    startLogOutTimer();
 
     updateUI(currentAccount);
   }
@@ -284,20 +306,3 @@ btnSort.addEventListener('click', e => {
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
-
-const ingredients = ['olives', 'broccoli'];
-
-const pizza = setTimeout(
-  (ing1, ing2) => {
-    console.log('Here is your pizza 🍕');
-    console.log(`with ${ing1} and ${ing2}`);
-  },
-  3000,
-  ...ingredients
-);
-
-console.log('Waitting....');
-
-if (ingredients.includes('spinach')) {
-  clearTimeout(pizza);
-}
