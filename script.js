@@ -184,15 +184,11 @@ const updateUI = acc => {
 };
 
 const startLogOutTimer = () => {
-  //set time to 5 minutes
-  let time = 100;
-  //call the timer every second
-  const timer = setInterval(() => {
+  const tick = () => {
     const minutes = String(Math.trunc(time / 60)).padStart(2, 00);
-    const secods = time % 60;
+    const secods = String(time % 60).padStart(2, 00);
     //in each call, print ther remaining time to UI
     labelTimer.textContent = `${minutes}:${secods}`;
-    time--;
 
     //When 0 seconds, stop timer and log out user
     if (time === 0) {
@@ -200,15 +196,23 @@ const startLogOutTimer = () => {
       labelWelcome.textContent = `Log in to get started`;
       containerApp.style.opacity = `0`;
     }
-  }, 1000);
+
+    time--;
+  };
+  //set time to 5 minutes
+  let time = 120;
+  //call the timer every second
+  tick();
+  const timer = setInterval(tick, 1000);
+  return timer;
 };
 
-let currentAccount;
+let currentAccount, timer;
 
 //Fake always logged in
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
+// currentAccount = account1;
+// updateUI(currentAccount);
+// containerApp.style.opacity = 100;
 // finish fake logged in    --------- must be DELETED after develop
 
 btnLogin.addEventListener('click', e => {
@@ -245,7 +249,10 @@ btnLogin.addEventListener('click', e => {
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur(); //remove focus of the field
 
-    startLogOutTimer();
+    if (timer) {
+      clearInterval(timer);
+    }
+    timer = startLogOutTimer();
 
     updateUI(currentAccount);
   }
@@ -253,6 +260,8 @@ btnLogin.addEventListener('click', e => {
 
 btnTransfer.addEventListener('click', e => {
   e.preventDefault();
+  clearInterval(timer);
+  timer = startLogOutTimer();
   const amount = +inputTransferAmount.value;
   const receiveAcc = accounts.find(acc => acc.username === inputTransferTo.value);
 
